@@ -1,3 +1,5 @@
+# API
+
 ### Аутентификация
 
 `POST /auth`
@@ -9,8 +11,7 @@
     ```jsx
     {
     	"login": "abc",
-    	"pass": "abc",
-    	"device_id": "abc"
+    	"pass": "abc"
     }
     ```
     
@@ -19,7 +20,7 @@
     ```jsx
     {
     	"success": {
-    		"token": "abc",
+    		"auth_token": "abc",
     		"team_id": 123
     	}
     }
@@ -30,7 +31,7 @@
     ```jsx
     {
     	"errors": {
-    		"key": [
+    		"keys": [
     			"internal_error", // серверная ошибка
     			"login_pass_invalid", // неверный логин или пароль
     			"invalid_request" // поля в реквесте невалидны, см. invalid_request_fields
@@ -46,6 +47,10 @@
 
 `POST /team/contest`
 
+- Описание
+    
+    Если пользователь залогинился до начала турнира, нужно показывать какой-то ожидающий экран, чтобы список заданий все пользователи увидели в одно время. Ближе к концу турнира можно вызвать метод для синхронизации завершения турнира.
+    
 - Экраны
     - Аутентификация
         - если турнир не начался: можно показывать экран со временем отсчета до начала турнира
@@ -84,7 +89,7 @@
     ```jsx
     {
     	"errors": {
-    		"key": [
+    		"keys": [
     			"internal_error", // серверная ошибка
     			"auth_token_invalid", // аутентификационный токен не валиден
     			"invalid_request", // поля в реквесте невалидны, см. invalid_request_fields
@@ -125,8 +130,10 @@
     			"description": "abc",
     			// сдано|не начато|попытка сдачи провалена
     			"status": "passed|not_started|attempt_failed",
-    			// номер подсказки - ключ массива
-    			"hints": ["abc"]
+    			// отправленные ответы (этого поля нет в ТЗ, но, кажется, оно было бы полезным)
+    			"answers": [{"answer": "abc", "is_passed": true}]
+    			// открытые подсказки. номер подсказки - ключ массива
+    			"hints_opened": ["abc"],
     		]
     	}
     }
@@ -137,7 +144,7 @@
     ```jsx
     {
     	"errors": {
-    		"key": [
+    		"keys": [
     			"internal_error", // серверная ошибка
     			"auth_token_invalid", // аутентификационный токен не валиден
     			"invalid_request", // поля в реквесте невалидны, см. invalid_request_fields
@@ -182,7 +189,7 @@
     ```jsx
     {
     	"errors": {
-    		"key": [
+    		"keys": [
     			"internal_error", // серверная ошибка
     			"auth_token_invalid", // аутентификационный токен не валиден
     			"invalid_request", // поля в реквесте невалидны, см. invalid_request_fields
@@ -233,7 +240,7 @@
     ```jsx
     {
     	"errors": {
-    		"key": [
+    		"keys": [
     			"internal_error", // серверная ошибка
     			"auth_token_invalid", // аутентификационный токен не валиден
     			"invalid_request", // поля в реквесте невалидны, см. invalid_request_fields
@@ -255,7 +262,7 @@
 
 ### Показать подсказку по заданию
 
-`POST /team/contest/task/hit`
+`POST /team/contest/task/hint`
 
 - Экраны
     - Список всех заданий команды
@@ -314,6 +321,9 @@
     - `Authorization: Bearer auth_token`
 - Request
     
+    ```jsx
+    {}
+    ```
     
 - Success response
     
@@ -329,7 +339,7 @@
     					"task_id": 123,
     					// сдано|не начато|попытка сдачи провалена
     					"status": "passed|not_started|attempt_failed",
-    					hints_requested: 123
+    					"hints_opened_count": 123
     				}
     			],
     			// количество сданных заданий
@@ -358,4 +368,3 @@
     	}
     }
     ```
-    
