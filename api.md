@@ -2,7 +2,8 @@
 
 ### Аутентификация
 
-`POST /auth`
+`POST /auth`  
+`Response statuses: 200, 500`
 
 - Экраны
     - Аутентификация
@@ -45,7 +46,8 @@
 
 ### Данные по текущему турниру
 
-`POST /team/contest`
+`POST /team/contest`  
+`Response statuses: 200, 500`
 
 - Описание
     
@@ -104,7 +106,8 @@
 
 ### Список всех заданий команды
 
-`POST /team/contest/tasks`
+`POST /team/contest/tasks`  
+`Response statuses: 200, 500`
 
 - Экраны
     - Авторизация
@@ -169,7 +172,8 @@
 
 ### Начать задание
 
-`POST /team/contest/task/start`
+`POST /team/contest/task/start`  
+`Response statuses: 200, 500`
 
 - Экраны
     - Список всех заданий команды
@@ -217,7 +221,8 @@
 
 ### Отправить ответ по заданию
 
-`POST /team/contest/task/answer`
+`POST /team/contest/task/answer`  
+`Response statuses: 200, 500`
 
 - Экраны
     - Список всех заданий команды
@@ -270,7 +275,8 @@
 
 ### Показать подсказку по заданию
 
-`POST /team/contest/task/hint`
+`POST /team/contest/task/hint`  
+`Response statuses: 200, 500`
 
 - Экраны
     - Список всех заданий команды
@@ -323,7 +329,8 @@
 
 ### Результаты всех команд
 
-`POST /contest/results`
+`POST /contest/results`  
+`Response statuses: 200, 500`
 
 - Headers
     - `Authorization: Bearer auth_token`
