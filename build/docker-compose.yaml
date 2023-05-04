@@ -1,0 +1,17 @@
+version: '3'
+services:
+  postgres.test-task:
+    container_name: postgres.test-task
+    image: library/postgres:13
+    restart: on-failure
+    ports:
+      - "54323:5432"
+    environment:
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      # хак, чтобы данные сохранялись локально
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      # сохраняем все данные БД вне докера, чтобы они не терялись при рестарте
+      - "./.data/postgres:/var/lib/postgresql/data"
