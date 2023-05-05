@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
@@ -15,22 +16,23 @@ func NewMiddleware(service Service) Middleware {
 	return Middleware{service: service}
 }
 
-// AuthRequest check auth token for access
 func (m Middleware) AuthRequest(nextHandler http.HandlerFunc) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			accessToken := r.Header.Get("Authorization")
 			splitToken := strings.Split(accessToken, "Bearer ")
 			accessToken = splitToken[1]
-			err := m.service.CheckAuth(accessToken)
+			// @todo: убрать team_id из запросов, а брать его по токену
+			teamId, err := m.service.GetTeamIdByAuthToken(accessToken)
 
 			if err != nil {
-				writeErrorResponse(w, errors.Wrap(err, "service.CheckAuth"))
+				writeErrorResponse(w, errors.Wrap(err, "service.GetTeamIdByAuthToken"))
 
 				return
 			}
+			ctx := context.WithValue(r.Context(), teamIdContextKey, teamId)
 
-			nextHandler.ServeHTTP(w, r)
+			nextHandler.ServeHTTP(w, r.WithContext(ctx))
 		},
 	)
 }

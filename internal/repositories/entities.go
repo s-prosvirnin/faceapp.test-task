@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/api"
 	"github.com/lib/pq"
 )
+
+const contestStatusActual = "actual"
 
 type contestEntity struct {
 	Id      int       `db:"id"`
@@ -43,7 +44,7 @@ type team struct {
 	AccessToken string `db:"access_token"`
 }
 
-func (s PgRepo) getContestEntity(teamId int) (contestEntity, error) {
+func (r PgRepo) getContestEntity(teamId int) (contestEntity, error) {
 	var contest contestEntity
 	query := `
 		select c.*
@@ -51,7 +52,7 @@ func (s PgRepo) getContestEntity(teamId int) (contestEntity, error) {
 		inner join contest_team ct on c.id = ct.contest_id
 		where ct.team_id = $1 and c.status = $2
 	`
-	err := s.db.Get(&contest, query, teamId, api.ContestStatusActual)
+	err := r.db.Get(&contest, query, teamId, contestStatusActual)
 	if err == sql.ErrNoRows {
 		return contestEntity{}, nil
 	}
@@ -62,7 +63,7 @@ func (s PgRepo) getContestEntity(teamId int) (contestEntity, error) {
 	return contest, nil
 }
 
-func (s PgRepo) getTaskEntity(contestId int, taskId int) (taskEntity, error) {
+func (r PgRepo) getTaskEntity(contestId int, taskId int) (taskEntity, error) {
 	var task taskEntity
 	query := `
 		select
@@ -71,7 +72,7 @@ func (s PgRepo) getTaskEntity(contestId int, taskId int) (taskEntity, error) {
 		inner join task t on t.id = ct.task_id
 		where ct.contest_id = $1 and  ct.task_id = $2
 	`
-	err := s.db.Get(&task, query, contestId, taskId)
+	err := r.db.Get(&task, query, contestId, taskId)
 	if err == sql.ErrNoRows {
 		return taskEntity{}, nil
 	}
@@ -82,7 +83,7 @@ func (s PgRepo) getTaskEntity(contestId int, taskId int) (taskEntity, error) {
 	return task, nil
 }
 
-func (s PgRepo) getTeamTaskEntity(teamId int, taskId int) (teamTaskEntity, error) {
+func (r PgRepo) getTeamTaskEntity(teamId int, taskId int) (teamTaskEntity, error) {
 	var teamTask teamTaskEntity
 	query := `
 		select
@@ -90,7 +91,7 @@ func (s PgRepo) getTeamTaskEntity(teamId int, taskId int) (teamTaskEntity, error
 		from team_task tt
 		where tt.team_id = $1 and tt.task_id = $2
 	`
-	err := s.db.Get(&teamTask, query, teamId, taskId)
+	err := r.db.Get(&teamTask, query, teamId, taskId)
 	if err == sql.ErrNoRows {
 		return teamTaskEntity{}, nil
 	}

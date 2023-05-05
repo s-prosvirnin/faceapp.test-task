@@ -1,39 +1,39 @@
 package repositories
 
-func (s PgRepo) ShowTaskHint(teamId int, taskId int, hintNum int) (nextHintNum int, hint string, err error) {
-	contest, err := s.getContestEntity(teamId)
+func (r PgRepo) ShowTaskHint(teamId int, taskId int, hintNum int) (nextHintNum int, hint string, err error) {
+	contest, err := r.getContestEntity(teamId)
 	if err != nil {
 		return 0, "", err
 	}
-	if err = s.checkContestExist(contest); err != nil {
+	if err = checkContestExist(contest); err != nil {
 		return 0, "", err
 	}
-	if err = s.checkContestStarting(contest); err != nil {
+	if err = checkContestStarting(contest); err != nil {
 		return 0, "", err
 	}
-	if err = s.checkContestFinished(contest); err != nil {
+	if err = checkContestFinished(contest); err != nil {
 		return 0, "", err
 	}
 
-	task, err := s.getTaskEntity(contest.Id, taskId)
+	task, err := r.getTaskEntity(contest.Id, taskId)
 	if err != nil {
 		return 0, "", err
 	}
-	teamTask, err := s.getTeamTaskEntity(teamId, taskId)
+	teamTask, err := r.getTeamTaskEntity(teamId, taskId)
 	if err != nil {
 		return 0, "", err
 	}
-	if err = s.checkTaskExist(task); err != nil {
+	if err = checkTaskExist(task); err != nil {
 		return 0, "", err
 	}
-	if err = s.checkTaskNotStarted(teamTask); err != nil {
+	if err = checkTaskNotStarted(teamTask); err != nil {
 		return 0, "", err
 	}
-	if err = s.checkTaskNextHintNumExist(task, hintNum); err != nil {
+	if err = checkTaskNextHintNumExist(task, hintNum); err != nil {
 		return 0, "", err
 	}
 	// если номер подсказки для показа меньше чем текущий, то показываем последнюю показанную подсказку
-	if s.isTaskHintAlreadyShown(teamTask, hintNum) {
+	if isTaskHintAlreadyShown(teamTask, hintNum) {
 		return getHintNumForResponse(task, teamTask), getHint(task, teamTask.NextHintNum), nil
 	}
 
@@ -44,7 +44,7 @@ func (s PgRepo) ShowTaskHint(teamId int, taskId int, hintNum int) (nextHintNum i
 		set next_hint_num = :next_hint_num
 		where team_id = :team_id and task_id = :task_id
 	`
-	res, err := s.db.NamedExec(query, teamTask)
+	res, err := r.db.NamedExec(query, teamTask)
 	if err != nil {
 		return 0, "", wrapInternalError(err, "db.Exec")
 	}

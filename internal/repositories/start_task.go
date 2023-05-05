@@ -4,33 +4,33 @@ import (
 	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/api"
 )
 
-func (s PgRepo) StartTask(teamId int, taskId int) error {
-	contest, err := s.getContestEntity(teamId)
+func (r PgRepo) StartTask(teamId int, taskId int) error {
+	contest, err := r.getContestEntity(teamId)
 	if err != nil {
 		return err
 	}
-	if err = s.checkContestExist(contest); err != nil {
+	if err = checkContestExist(contest); err != nil {
 		return err
 	}
-	if err = s.checkContestStarting(contest); err != nil {
+	if err = checkContestStarting(contest); err != nil {
 		return err
 	}
-	if err = s.checkContestFinished(contest); err != nil {
+	if err = checkContestFinished(contest); err != nil {
 		return err
 	}
 
-	task, err := s.getTaskEntity(contest.Id, taskId)
+	task, err := r.getTaskEntity(contest.Id, taskId)
 	if err != nil {
 		return err
 	}
-	teamTask, err := s.getTeamTaskEntity(teamId, taskId)
+	teamTask, err := r.getTeamTaskEntity(teamId, taskId)
 	if err != nil {
 		return err
 	}
-	if err = s.checkTaskExist(task); err != nil {
+	if err = checkTaskExist(task); err != nil {
 		return err
 	}
-	if err = s.checkTaskAlreadyStarted(teamTask); err != nil {
+	if err = checkTaskAlreadyStarted(teamTask); err != nil {
 		return err
 	}
 
@@ -47,9 +47,9 @@ func (s PgRepo) StartTask(teamId int, taskId int) error {
 		    (team_id, task_id, answers, answer_uuids, answers_created_at, next_hint_num, status)
 		values (:team_id, :task_id, :answers, :answer_uuids, :answers_created_at, :next_hint_num, :status)
 	`
-	res, err := s.db.NamedExec(query, teamTask)
+	res, err := r.db.NamedExec(query, teamTask)
 	if err != nil {
-		return wrapInternalError(err, "db.Exec")
+		return wrapInternalError(err, "db.NamedExec")
 	}
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {

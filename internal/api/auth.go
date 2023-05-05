@@ -1,25 +1,25 @@
 package api
 
 import (
+	"context"
 	"net/http"
 
+	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/utils"
 	"github.com/pkg/errors"
 )
 
-var ErrLoginPasswordInvalid = errors.New("login_pass_invalid")
-
 type AuthRequest struct {
-	Login    string `json:"login" validate:"required"`
-	Password string `json:"pass" validate:"required"`
+	Login    string `json:"login"`
+	Password string `json:"pass"`
 }
 
-func (a *AuthRequest) Validate() []error {
+func (a *AuthRequest) Validate(requestCtx context.Context) []error {
 	var errs []error
 	if a.Login == "" {
-		errs = append(errs, errors.New("login"))
+		errs = append(errs, utils.NewErrWithType(errors.New("login"), ErrorInvalidRequest))
 	}
 	if a.Password == "" {
-		errs = append(errs, errors.New("password"))
+		errs = append(errs, utils.NewErrWithType(errors.New("pass"), ErrorInvalidRequest))
 	}
 
 	return errs
@@ -37,6 +37,7 @@ func (c *Controller) Auth(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// упростил - пароль не шифруется, передается в открытом виде
+	// упростил - используется только один бесконечный токен
 	response, err := c.service.Login(req.Login, req.Password)
 	if err != nil {
 		writeErrorResponse(w, errors.Wrap(err, "AuthRequest"))

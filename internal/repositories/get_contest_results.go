@@ -27,18 +27,17 @@ const (
 	incorrectAnswerPenaltySec = 30 * 60
 )
 
-func (s PgRepo) GetContestResults(teamId int) (api.GetContestResultsResponse, error) {
-	contest, err := s.getContestEntity(teamId)
+func (r PgRepo) GetContestResults(teamId int) (api.GetContestResultsResponse, error) {
+	contest, err := r.getContestEntity(teamId)
 	if err != nil {
 		return api.GetContestResultsResponse{}, err
 	}
-	if err = s.checkContestExist(contest); err != nil {
+	if err = checkContestExist(contest); err != nil {
 		return api.GetContestResultsResponse{}, err
 	}
-	if err = s.checkContestStarting(contest); err != nil {
+	if err = checkContestStarting(contest); err != nil {
 		return api.GetContestResultsResponse{}, err
 	}
-	// @todo: pros проверить ошибки
 
 	var teamsTasks []teamsTasksEntity
 	query := `
@@ -57,7 +56,7 @@ func (s PgRepo) GetContestResults(teamId int) (api.GetContestResultsResponse, er
 		where contest_task.contest_id = $1
 		order by team.id
 	`
-	err = s.db.Select(&teamsTasks, query, contest.Id)
+	err = r.db.Select(&teamsTasks, query, contest.Id)
 	if err == sql.ErrNoRows || teamsTasks == nil {
 		// сверху мы проверили актуальность турнира, такая ситуация является внутренней ошибкой
 		return api.GetContestResultsResponse{}, utils.NewErrWithType(

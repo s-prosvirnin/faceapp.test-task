@@ -1,3 +1,4 @@
 /.tmp
 /.idea
 /build/.data
+.DS_Store

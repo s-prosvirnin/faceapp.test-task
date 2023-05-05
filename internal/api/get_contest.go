@@ -12,10 +12,11 @@ type GetContestRequest struct {
 }
 
 type GetContestResponse struct {
-	ContestId int       `json:"contest_id"`
-	StartAt   time.Time `json:"start_at"`
-	EndAt     time.Time `json:"end_at"`
-	// @todo: pros добавить поля
+	ContestId      int       `json:"contest_id"`
+	StartAt        time.Time `json:"start_at"`
+	EndAt          time.Time `json:"end_at"`
+	TimeToStartSec int       `json:"time_to_start_sec"`
+	Status         string    `json:"status"`
 }
 
 func (c *Controller) GetContest(w http.ResponseWriter, r *http.Request) {
@@ -29,6 +30,5 @@ func (c *Controller) GetContest(w http.ResponseWriter, r *http.Request) {
 		writeErrorResponse(w, errors.Wrap(err, "GetContest"))
 		return
 	}
-	// @todo: pros добавить поля в response
 	writeSuccessResponse(w, response)
 }

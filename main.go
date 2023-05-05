@@ -52,7 +52,7 @@ func main() {
 	exitChan := startListenForQuit(ctx)
 	select {
 	case err := <-httpErrChan:
-		log.Fatal(errors.Wrap(err, "received error from server"))
+		log.Fatal(errors.Wrap(err, "received error from http server"))
 	case <-exitChan:
 		break
 	}
@@ -122,13 +122,14 @@ func initDb(ctx context.Context) (*sqlx.DB, error) {
 func startListenForQuit(ctx context.Context) <-chan struct{} {
 	exitChan := make(chan struct{})
 	go func() {
-		// @todo: pros не обрабатывается Ctrl+C
-		quit := make(chan os.Signal, 1)
+		quit := make(chan os.Signal, 3)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
 		select {
 		case <-ctx.Done():
 			return
-		case <-quit:
+		case sig := <-quit:
+			log.Println("OS signal received: ", sig)
+			exitChan <- struct{}{}
 			close(exitChan)
 
 			return

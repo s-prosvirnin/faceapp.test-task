@@ -7,7 +7,7 @@ import (
 	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/utils"
 )
 
-func (s PgRepo) CheckAuth(accessToken string) error {
+func (r PgRepo) GetTeamIdByAuthToken(accessToken string) (int, error) {
 	query := `
 		select a.id
 		from team a
@@ -15,13 +15,13 @@ func (s PgRepo) CheckAuth(accessToken string) error {
 	`
 
 	var teamId int
-	err := s.db.Get(&teamId, query, accessToken)
+	err := r.db.Get(&teamId, query, accessToken)
 	if err == sql.ErrNoRows {
-		return utils.NewErrWithType(api.ErrAuthTokenInvalid, api.ErrorDomainType)
+		return 0, utils.NewErrWithType(api.ErrAuthTokenInvalid, api.ErrorDomainType)
 	}
 	if err != nil {
-		return wrapInternalError(err, "db.Get")
+		return 0, wrapInternalError(err, "db.Get")
 	}
 
-	return nil
+	return teamId, nil
 }

@@ -6,8 +6,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-// @todo: pros добавить в апи team_id
-// @todo: pros возможно, тут лучше передавать contest_id
 type GetContestResultsRequest struct {
 	TeamRequest
 }
@@ -41,6 +39,5 @@ func (c *Controller) GetContestResults(w http.ResponseWriter, r *http.Request) {
 		writeErrorResponse(w, errors.Wrap(err, "GetContestResults"))
 		return
 	}
-	// @todo: pros добавить поля в response
 	writeSuccessResponse(w, response)
 }

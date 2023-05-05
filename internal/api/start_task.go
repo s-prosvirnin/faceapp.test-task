@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/pkg/errors"
@@ -11,9 +12,9 @@ type StartTaskRequest struct {
 	TaskRequest
 }
 
-func (r *StartTaskRequest) Validate() []error {
-	errs := r.TeamRequest.Validate()
-	return append(errs, r.TeamRequest.Validate()...)
+func (r *StartTaskRequest) Validate(requestCtx context.Context) []error {
+	errs := r.TeamRequest.Validate(requestCtx)
+	return append(errs, r.TaskRequest.Validate(requestCtx)...)
 }
 
 func (c *Controller) StartTask(w http.ResponseWriter, r *http.Request) {

@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s PgRepo) Login(login string, password string) (api.GetAuthResponse, error) {
+func (r PgRepo) Login(login string, password string) (api.GetAuthResponse, error) {
 	var team team
 	// @todo: в теории тут может быть паника
 	authToken := uuid.New().String()
@@ -19,7 +19,7 @@ func (s PgRepo) Login(login string, password string) (api.GetAuthResponse, error
 		returning *
 	`
 
-	err := s.db.QueryRowx(query, authToken, login, password).StructScan(&team)
+	err := r.db.QueryRowx(query, authToken, login, password).StructScan(&team)
 	if err == sql.ErrNoRows {
 		return api.GetAuthResponse{}, utils.NewErrWithType(api.ErrLoginPasswordInvalid, api.ErrorDomainType)
 	}

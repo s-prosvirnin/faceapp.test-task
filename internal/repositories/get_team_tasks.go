@@ -8,18 +8,15 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (s PgRepo) GetTeamTasks(teamId int) (api.GetTasksResponse, error) {
-	contest, err := s.getContestEntity(teamId)
+func (r PgRepo) GetTeamTasks(teamId int) (api.GetTasksResponse, error) {
+	contest, err := r.getContestEntity(teamId)
 	if err != nil {
 		return api.GetTasksResponse{}, err
 	}
-	if err = s.checkContestExist(contest); err != nil {
+	if err = checkContestExist(contest); err != nil {
 		return api.GetTasksResponse{}, err
 	}
-	if err = s.checkContestStarting(contest); err != nil {
-		return api.GetTasksResponse{}, err
-	}
-	if err = s.checkContestFinished(contest); err != nil {
+	if err = checkContestStarting(contest); err != nil {
 		return api.GetTasksResponse{}, err
 	}
 
@@ -31,7 +28,7 @@ func (s PgRepo) GetTeamTasks(teamId int) (api.GetTasksResponse, error) {
 		inner join task t on t.id = ct.task_id
 		where ct.contest_id = $1
 	`
-	err = s.db.Select(&tasks, query, contest.Id)
+	err = r.db.Select(&tasks, query, contest.Id)
 	if err == sql.ErrNoRows || tasks == nil {
 		// сверху мы проверили актуальность турнира, такая ситуация является внутренней ошибкой
 		return api.GetTasksResponse{}, utils.NewErrWithType(
@@ -50,7 +47,7 @@ func (s PgRepo) GetTeamTasks(teamId int) (api.GetTasksResponse, error) {
 		from team_task tt
 		where tt.team_id = $1
 	`
-	err = s.db.Select(&teamTasks, query, teamId)
+	err = r.db.Select(&teamTasks, query, teamId)
 	if err != nil {
 		return api.GetTasksResponse{}, wrapInternalError(err, "teamTasks.db.Select")
 	}

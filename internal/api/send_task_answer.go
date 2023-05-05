@@ -1,8 +1,10 @@
 package api
 
 import (
+	"context"
 	"net/http"
 
+	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/utils"
 	"github.com/pkg/errors"
 )
 
@@ -13,14 +15,14 @@ type SendTaskAnswerRequest struct {
 	AnswerUuid string `json:"answer_uuid"`
 }
 
-func (r *SendTaskAnswerRequest) Validate() []error {
-	errs := r.TeamRequest.Validate()
-	errs = append(errs, r.TeamRequest.Validate()...)
+func (r *SendTaskAnswerRequest) Validate(requestCtx context.Context) []error {
+	errs := r.TeamRequest.Validate(requestCtx)
+	errs = append(errs, r.TaskRequest.Validate(requestCtx)...)
 	if r.Answer == "" {
-		errs = append(errs, errors.New("answer"))
+		errs = append(errs, utils.NewErrWithType(errors.New("answer"), ErrorInvalidRequest))
 	}
 	if r.AnswerUuid == "" {
-		errs = append(errs, errors.New("answer_uuid"))
+		errs = append(errs, utils.NewErrWithType(errors.New("answer_uuid"), ErrorInvalidRequest))
 	}
 
 	return errs

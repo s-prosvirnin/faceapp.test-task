@@ -7,42 +7,52 @@ import (
 	"github.com/lib/pq"
 )
 
-func (s PgRepo) SendTaskAnswer(teamId int, taskId int, teamAnswer string, answerUuid string) (
+const (
+	answerPerMinLimit = 3
+	answersTotalLimit = 5
+)
+
+func (r PgRepo) SendTaskAnswer(teamId int, taskId int, teamAnswer string, answerUuid string) (
 	answerPassed bool,
 	err error,
 ) {
-	contest, err := s.getContestEntity(teamId)
+	contest, err := r.getContestEntity(teamId)
 	if err != nil {
 		return false, err
 	}
-	if err = s.checkContestExist(contest); err != nil {
+	if err = checkContestExist(contest); err != nil {
 		return false, err
 	}
-	if err = s.checkContestStarting(contest); err != nil {
+	if err = checkContestStarting(contest); err != nil {
 		return false, err
 	}
-	if err = s.checkContestFinished(contest); err != nil {
+	if err = checkContestFinished(contest); err != nil {
 		return false, err
 	}
 
-	task, err := s.getTaskEntity(contest.Id, taskId)
+	task, err := r.getTaskEntity(contest.Id, taskId)
 	if err != nil {
 		return false, err
 	}
-	teamTask, err := s.getTeamTaskEntity(teamId, taskId)
+	teamTask, err := r.getTeamTaskEntity(teamId, taskId)
 	if err != nil {
 		return false, err
 	}
-	if err = s.checkTaskExist(task); err != nil {
+	if err = checkTaskExist(task); err != nil {
 		return false, err
 	}
-	if err = s.checkTaskNotStarted(teamTask); err != nil {
+	if err = checkTaskNotStarted(teamTask); err != nil {
 		return false, err
 	}
-	if isTaskPassed(task, teamTask) {
+	if err = checkTaskPassed(task, teamTask); err != nil {
 		return false, err
 	}
-	// @todo: pros добавить ограничения на кол-во
+	if err = checkAnswersLimitExceed(teamTask); err != nil {
+		return false, err
+	}
+	if err = checkAnswerPerTimeLimitExceed(teamTask); err != nil {
+		return false, err
+	}
 
 	// проверяем идемпотентность
 	for _, uuid := range teamTask.AnswersUuid {
@@ -67,7 +77,7 @@ func (s PgRepo) SendTaskAnswer(teamId int, taskId int, teamAnswer string, answer
 		    , status = :status
 		where team_id = :team_id and task_id = :task_id
 	`
-	res, err := s.db.NamedExec(query, teamTask)
+	res, err := r.db.NamedExec(query, teamTask)
 	if err != nil {
 		return false, wrapInternalError(err, "db.Exec")
 	}

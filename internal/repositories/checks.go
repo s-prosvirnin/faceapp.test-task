@@ -5,11 +5,10 @@ import (
 
 	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/api"
 	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/utils"
+	"github.com/lib/pq"
 )
 
-// @todo: pros убрать ресивер
-
-func (s PgRepo) checkContestStarting(contest contestEntity) error {
+func checkContestStarting(contest contestEntity) error {
 	if contest.StartAt.After(time.Now()) {
 		return utils.NewErrWithType(api.ErrContestNotStarted, api.ErrorDomainType)
 	}
@@ -17,7 +16,7 @@ func (s PgRepo) checkContestStarting(contest contestEntity) error {
 	return nil
 }
 
-func (s PgRepo) checkContestFinished(contest contestEntity) error {
+func checkContestFinished(contest contestEntity) error {
 	if contest.EndAt.Before(time.Now()) {
 		return utils.NewErrWithType(api.ErrContestFinished, api.ErrorDomainType)
 	}
@@ -25,7 +24,7 @@ func (s PgRepo) checkContestFinished(contest contestEntity) error {
 	return nil
 }
 
-func (s PgRepo) checkContestExist(contest contestEntity) error {
+func checkContestExist(contest contestEntity) error {
 	if contest.Id <= 0 {
 		return utils.NewErrWithType(api.ErrContestNotFound, api.ErrorDomainType)
 	}
@@ -33,7 +32,7 @@ func (s PgRepo) checkContestExist(contest contestEntity) error {
 	return nil
 }
 
-func (s PgRepo) checkTaskExist(task taskEntity) error {
+func checkTaskExist(task taskEntity) error {
 	if task.Id <= 0 {
 		return utils.NewErrWithType(api.ErrTaskNotFound, api.ErrorDomainType)
 	}
@@ -41,7 +40,7 @@ func (s PgRepo) checkTaskExist(task taskEntity) error {
 	return nil
 }
 
-func (s PgRepo) checkTaskAlreadyStarted(task teamTaskEntity) error {
+func checkTaskAlreadyStarted(task teamTaskEntity) error {
 	if task.TaskId > 0 {
 		return utils.NewErrWithType(api.ErrTaskAlreadyStarted, api.ErrorDomainType)
 	}
@@ -49,7 +48,7 @@ func (s PgRepo) checkTaskAlreadyStarted(task teamTaskEntity) error {
 	return nil
 }
 
-func (s PgRepo) checkTaskNotStarted(task teamTaskEntity) error {
+func checkTaskNotStarted(task teamTaskEntity) error {
 	if task.TaskId <= 0 {
 		return utils.NewErrWithType(api.ErrTaskNotStarted, api.ErrorDomainType)
 	}
@@ -57,7 +56,7 @@ func (s PgRepo) checkTaskNotStarted(task teamTaskEntity) error {
 	return nil
 }
 
-func (s PgRepo) checkTaskNextHintNumExist(task taskEntity, nextHintNum int) error {
+func checkTaskNextHintNumExist(task taskEntity, nextHintNum int) error {
 	if nextHintNum >= len(task.Hints) || nextHintNum < 0 {
 		return utils.NewErrWithType(api.ErrTaskHintNumNotExist, api.ErrorDomainType)
 	}
@@ -65,7 +64,7 @@ func (s PgRepo) checkTaskNextHintNumExist(task taskEntity, nextHintNum int) erro
 	return nil
 }
 
-func (s PgRepo) isTaskHintAlreadyShown(task teamTaskEntity, nextHintNum int) bool {
+func isTaskHintAlreadyShown(task teamTaskEntity, nextHintNum int) bool {
 	if nextHintNum < task.NextHintNum {
 		return true
 	}
@@ -81,14 +80,14 @@ func isAnswerPassed(task taskEntity, answer string) bool {
 	return false
 }
 
-func isTaskPassed(task taskEntity, teamTask teamTaskEntity) bool {
+func checkTaskPassed(task taskEntity, teamTask teamTaskEntity) error {
 	for _, teamAnswer := range teamTask.Answers {
 		if teamAnswer == task.Answer {
-			return true
+			return utils.NewErrWithType(api.ErrTaskAnswerAlreadyPassed, api.ErrorDomainType)
 		}
 	}
 
-	return false
+	return nil
 }
 
 func isNextHintNumLast(task taskEntity, nextNum int) bool {
@@ -97,4 +96,28 @@ func isNextHintNumLast(task taskEntity, nextNum int) bool {
 	}
 
 	return false
+}
+
+func checkAnswerPerTimeLimitExceed(teamTask teamTaskEntity) error {
+	for i := len(teamTask.AnswersCreatedAt) - 1; i >= 0; i-- {
+		lastAnswerTime, _ := pq.ParseTimestamp(
+			time.UTC,
+			teamTask.AnswersCreatedAt[i],
+		)
+
+		if time.Now().Sub(lastAnswerTime).Seconds() > 60 &&
+			(len(teamTask.AnswersCreatedAt)-1)-i > answerPerMinLimit {
+			return utils.NewErrWithType(api.ErrTaskAnswerPerTimeLimitExceeded, api.ErrorDomainType)
+		}
+	}
+
+	return nil
+}
+
+func checkAnswersLimitExceed(teamTask teamTaskEntity) error {
+	if len(teamTask.AnswersCreatedAt) > answersTotalLimit {
+		return utils.NewErrWithType(api.ErrTaskAnswersLimitExceeded, api.ErrorDomainType)
+	}
+
+	return nil
 }
