@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/api"
 	"github.com/lib/pq"
 )
 
@@ -50,7 +51,7 @@ func (s PgRepo) getContestEntity(teamId int) (contestEntity, error) {
 		inner join contest_team ct on c.id = ct.contest_id
 		where ct.team_id = $1 and c.status = $2
 	`
-	err := s.db.Get(&contest, query, teamId, teamTaskStatusActual)
+	err := s.db.Get(&contest, query, teamId, api.ContestStatusActual)
 	if err == sql.ErrNoRows {
 		return contestEntity{}, nil
 	}

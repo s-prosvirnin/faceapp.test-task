@@ -13,13 +13,13 @@ func (s PgRepo) GetTeamTasks(teamId int) (api.GetTasksResponse, error) {
 	if err != nil {
 		return api.GetTasksResponse{}, err
 	}
-	if s.checkContestExist(contest) != nil {
+	if err = s.checkContestExist(contest); err != nil {
 		return api.GetTasksResponse{}, err
 	}
-	if s.checkContestStarting(contest) != nil {
+	if err = s.checkContestStarting(contest); err != nil {
 		return api.GetTasksResponse{}, err
 	}
-	if s.checkContestFinished(contest) != nil {
+	if err = s.checkContestFinished(contest); err != nil {
 		return api.GetTasksResponse{}, err
 	}
 
@@ -32,15 +32,15 @@ func (s PgRepo) GetTeamTasks(teamId int) (api.GetTasksResponse, error) {
 		where ct.contest_id = $1
 	`
 	err = s.db.Select(&tasks, query, contest.Id)
-	if err == sql.ErrNoRows {
+	if err == sql.ErrNoRows || tasks == nil {
 		// сверху мы проверили актуальность турнира, такая ситуация является внутренней ошибкой
 		return api.GetTasksResponse{}, utils.NewErrWithType(
-			errors.New("contest results not found"),
+			errors.New("team tasks not found"),
 			api.ErrorInternalType,
 		)
 	}
 	if err != nil {
-		return api.GetTasksResponse{}, wrapInternalError(err, "db.Select")
+		return api.GetTasksResponse{}, wrapInternalError(err, "tasks.db.Select")
 	}
 
 	var teamTasks []teamTaskEntity
@@ -48,11 +48,11 @@ func (s PgRepo) GetTeamTasks(teamId int) (api.GetTasksResponse, error) {
 		select
 		    tt.*
 		from team_task tt
-		where tt.team_id = $1 and tt.task_id = $2
+		where tt.team_id = $1
 	`
 	err = s.db.Select(&teamTasks, query, teamId)
 	if err != nil {
-		return api.GetTasksResponse{}, wrapInternalError(err, "db.Select")
+		return api.GetTasksResponse{}, wrapInternalError(err, "teamTasks.db.Select")
 	}
 
 	return makeTasksResponse(tasks, teamTasks), nil
@@ -79,15 +79,13 @@ func makeTasksResponse(tasks []taskEntity, teamTasks []teamTaskEntity) api.GetTa
 		}
 		nextHintNum := 0
 		openedHints := []string{}
-		status := api.TaskStatusNotStarted
+		status := getTaskStatusForResponse(teamTask.Status)
 		if teamTask.TaskId > 0 {
-			nextHintNum = teamTask.NextHintNum
-			openedHints = task.Hints
-			if nextHintNum >= 0 {
+			nextHintNum = getHintNumForResponse(task, teamTask)
+			if isNextHintNumLast(task, teamTask.NextHintNum) {
+				openedHints = task.Hints
+			} else {
 				openedHints = task.Hints[0:teamTask.NextHintNum]
-			}
-			if teamTask.Status != "" {
-				status = teamTask.Status
 			}
 		}
 		hintsResponse := api.HintsResponse{

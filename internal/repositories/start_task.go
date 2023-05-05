@@ -9,13 +9,13 @@ func (s PgRepo) StartTask(teamId int, taskId int) error {
 	if err != nil {
 		return err
 	}
-	if s.checkContestExist(contest) != nil {
+	if err = s.checkContestExist(contest); err != nil {
 		return err
 	}
-	if s.checkContestStarting(contest) != nil {
+	if err = s.checkContestStarting(contest); err != nil {
 		return err
 	}
-	if s.checkContestFinished(contest) != nil {
+	if err = s.checkContestFinished(contest); err != nil {
 		return err
 	}
 
@@ -27,22 +27,27 @@ func (s PgRepo) StartTask(teamId int, taskId int) error {
 	if err != nil {
 		return err
 	}
-	if err != nil {
+	if err = s.checkTaskExist(task); err != nil {
 		return err
 	}
-	if s.checkTaskExist(task) != nil {
-		return err
-	}
-	if s.checkTaskAlreadyStarted(teamTask) != nil {
+	if err = s.checkTaskAlreadyStarted(teamTask); err != nil {
 		return err
 	}
 
+	teamTask.TeamId = teamId
+	teamTask.TaskId = taskId
+	teamTask.Answers = []string{}
+	teamTask.AnswersUuid = []string{}
+	teamTask.AnswersCreatedAt = []string{}
+	teamTask.NextHintNum = 0
+	teamTask.Status = api.TaskStatusStarted
+
 	query := `
 		insert into team_task 
-		    (team_id, task_id, answers, answer_uuids, next_hint_num, status)
-		values ($1, $2, '{}', '{}', 0, $3)
+		    (team_id, task_id, answers, answer_uuids, answers_created_at, next_hint_num, status)
+		values (:team_id, :task_id, :answers, :answer_uuids, :answers_created_at, :next_hint_num, :status)
 	`
-	res, err := s.db.Exec(query, teamId, taskId, api.TaskStatusStarted)
+	res, err := s.db.NamedExec(query, teamTask)
 	if err != nil {
 		return wrapInternalError(err, "db.Exec")
 	}

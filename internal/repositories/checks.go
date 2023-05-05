@@ -42,7 +42,7 @@ func (s PgRepo) checkTaskExist(task taskEntity) error {
 }
 
 func (s PgRepo) checkTaskAlreadyStarted(task teamTaskEntity) error {
-	if task.TaskId >= 0 {
+	if task.TaskId > 0 {
 		return utils.NewErrWithType(api.ErrTaskAlreadyStarted, api.ErrorDomainType)
 	}
 
@@ -57,8 +57,8 @@ func (s PgRepo) checkTaskNotStarted(task teamTaskEntity) error {
 	return nil
 }
 
-func (s PgRepo) checkTaskNextHintNumExist(task teamTaskEntity, nextHintNum int) error {
-	if nextHintNum > task.NextHintNum || nextHintNum < 0 {
+func (s PgRepo) checkTaskNextHintNumExist(task taskEntity, nextHintNum int) error {
+	if nextHintNum >= len(task.Hints) || nextHintNum < 0 {
 		return utils.NewErrWithType(api.ErrTaskHintNumNotExist, api.ErrorDomainType)
 	}
 
@@ -86,6 +86,14 @@ func isTaskPassed(task taskEntity, teamTask teamTaskEntity) bool {
 		if teamAnswer == task.Answer {
 			return true
 		}
+	}
+
+	return false
+}
+
+func isNextHintNumLast(task taskEntity, nextNum int) bool {
+	if nextNum >= len(task.Hints) {
+		return true
 	}
 
 	return false

@@ -15,7 +15,7 @@ type ShowTaskHintRequest struct {
 func (r *ShowTaskHintRequest) Validate() []error {
 	errs := r.TeamRequest.Validate()
 	errs = append(errs, r.TeamRequest.Validate()...)
-	if r.HintNum <= 0 {
+	if r.HintNum < 0 {
 		errs = append(errs, errors.New("hint_num"))
 	}
 

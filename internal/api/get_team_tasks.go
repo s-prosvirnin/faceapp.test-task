@@ -25,7 +25,7 @@ type TaskResponse struct {
 }
 
 type AnswerResponse struct {
-	Answer   string `json:"AnswerResponse"`
+	Answer   string `json:"answer"`
 	IsPassed bool   `json:"is_passed"`
 }
 

@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/api"
+	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/utils"
 	"github.com/lib/pq"
+	"github.com/pkg/errors"
 )
 
 type teamsTasksEntity struct {
@@ -30,10 +32,10 @@ func (s PgRepo) GetContestResults(teamId int) (api.GetContestResultsResponse, er
 	if err != nil {
 		return api.GetContestResultsResponse{}, err
 	}
-	if s.checkContestExist(contest) != nil {
+	if err = s.checkContestExist(contest); err != nil {
 		return api.GetContestResultsResponse{}, err
 	}
-	if s.checkContestStarting(contest) != nil {
+	if err = s.checkContestStarting(contest); err != nil {
 		return api.GetContestResultsResponse{}, err
 	}
 	// @todo: pros проверить ошибки
@@ -56,6 +58,13 @@ func (s PgRepo) GetContestResults(teamId int) (api.GetContestResultsResponse, er
 		order by team.id
 	`
 	err = s.db.Select(&teamsTasks, query, contest.Id)
+	if err == sql.ErrNoRows || teamsTasks == nil {
+		// сверху мы проверили актуальность турнира, такая ситуация является внутренней ошибкой
+		return api.GetContestResultsResponse{}, utils.NewErrWithType(
+			errors.New("contest results not found"),
+			api.ErrorInternalType,
+		)
+	}
 	if err != nil {
 		return api.GetContestResultsResponse{}, wrapInternalError(err, "db.Select")
 	}
@@ -74,7 +83,8 @@ func makeContestResultsResponse(teamsTasks []teamsTasksEntity, contest contestEn
 		if !isExist {
 			teamResponse.TeamName = teamTask.TeamName
 		}
-		if teamTask.TaskStatus.String == api.TaskStatusPassed {
+		status := getTaskStatusForResponse(teamTask.TaskStatus.String)
+		if status == api.TaskStatusPassed {
 			teamResponse.TasksPassedCount++
 			passedAnswerTime, err := pq.ParseTimestamp(
 				time.UTC,
@@ -93,7 +103,7 @@ func makeContestResultsResponse(teamsTasks []teamsTasksEntity, contest contestEn
 		teamResponse.TaskResults = append(
 			teamResponse.TaskResults, api.TaskResultResponse{
 				TaskId:           teamTask.TaskId,
-				Status:           teamTask.TaskStatus.String,
+				Status:           status,
 				HintsOpenedCount: int(teamTask.TaskNextHitNum.Int32),
 			},
 		)
@@ -108,7 +118,7 @@ func makeContestResultsResponse(teamsTasks []teamsTasksEntity, contest contestEn
 		teamResponses,
 		func(i, j int) bool {
 			if teamResponses[i].TasksPassedCount == teamResponses[j].TasksPassedCount {
-				return teamResponses[i].PenaltyTimeSec > teamResponses[j].PenaltyTimeSec
+				return teamResponses[i].PenaltyTimeSec < teamResponses[j].PenaltyTimeSec
 			}
 
 			return teamResponses[i].TasksPassedCount > teamResponses[j].TasksPassedCount

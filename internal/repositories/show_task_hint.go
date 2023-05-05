@@ -5,13 +5,13 @@ func (s PgRepo) ShowTaskHint(teamId int, taskId int, hintNum int) (nextHintNum i
 	if err != nil {
 		return 0, "", err
 	}
-	if s.checkContestExist(contest) != nil {
+	if err = s.checkContestExist(contest); err != nil {
 		return 0, "", err
 	}
-	if s.checkContestStarting(contest) != nil {
+	if err = s.checkContestStarting(contest); err != nil {
 		return 0, "", err
 	}
-	if s.checkContestFinished(contest) != nil {
+	if err = s.checkContestFinished(contest); err != nil {
 		return 0, "", err
 	}
 
@@ -23,18 +23,18 @@ func (s PgRepo) ShowTaskHint(teamId int, taskId int, hintNum int) (nextHintNum i
 	if err != nil {
 		return 0, "", err
 	}
-	if s.checkTaskExist(task) != nil {
+	if err = s.checkTaskExist(task); err != nil {
 		return 0, "", err
 	}
-	if s.checkTaskNotStarted(teamTask) != nil {
+	if err = s.checkTaskNotStarted(teamTask); err != nil {
 		return 0, "", err
 	}
-	if s.checkTaskNextHintNumExist(teamTask, hintNum) != nil {
+	if err = s.checkTaskNextHintNumExist(task, hintNum); err != nil {
 		return 0, "", err
 	}
 	// если номер подсказки для показа меньше чем текущий, то показываем последнюю показанную подсказку
 	if s.isTaskHintAlreadyShown(teamTask, hintNum) {
-		return teamTask.NextHintNum, getHintByNum(teamTask.NextHintNum-1, task), nil
+		return getHintNumForResponse(task, teamTask), getHint(task, teamTask.NextHintNum), nil
 	}
 
 	teamTask.NextHintNum++
@@ -56,16 +56,13 @@ func (s PgRepo) ShowTaskHint(teamId int, taskId int, hintNum int) (nextHintNum i
 		return 0, "", wrapInternalError(err, "rows affected  mismatch")
 	}
 
-	return teamTask.NextHintNum, getHintByNum(teamTask.NextHintNum, task), nil
+	return getHintNumForResponse(task, teamTask), getHint(task, teamTask.NextHintNum), nil
 }
 
-func getHintByNum(num int, task taskEntity) string {
-	if num <= 0 {
-		return task.Hints[0]
-	}
-	if num >= len(task.Hints)-1 {
+func getHint(task taskEntity, nextNum int) string {
+	if isNextHintNumLast(task, nextNum) {
 		return task.Hints[len(task.Hints)-1]
 	}
 
-	return task.Hints[num]
+	return task.Hints[nextNum-1]
 }

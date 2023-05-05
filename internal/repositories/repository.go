@@ -22,3 +22,20 @@ func NewPgRepo(db *sqlx.DB) PgRepo {
 func wrapInternalError(err error, wrapMessage string) error {
 	return utils.NewErrWithType(errors.Wrap(err, wrapMessage), api.ErrorInternalType)
 }
+
+func getHintNumForResponse(task taskEntity, teamTask teamTaskEntity) int {
+	if isNextHintNumLast(task, teamTask.NextHintNum) {
+		return -1
+	}
+
+	return teamTask.NextHintNum
+}
+
+func getTaskStatusForResponse(status string) string {
+	// если задание не начато, то нет записи в teamTask - проставить дефолтный статус
+	if status == "" {
+		return api.TaskStatusNotStarted
+	}
+
+	return status
+}

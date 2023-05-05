@@ -3,6 +3,7 @@ package repositories
 import (
 	"time"
 
+	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/api"
 	"github.com/lib/pq"
 )
 
@@ -14,13 +15,13 @@ func (s PgRepo) SendTaskAnswer(teamId int, taskId int, teamAnswer string, answer
 	if err != nil {
 		return false, err
 	}
-	if s.checkContestExist(contest) != nil {
+	if err = s.checkContestExist(contest); err != nil {
 		return false, err
 	}
-	if s.checkContestStarting(contest) != nil {
+	if err = s.checkContestStarting(contest); err != nil {
 		return false, err
 	}
-	if s.checkContestFinished(contest) != nil {
+	if err = s.checkContestFinished(contest); err != nil {
 		return false, err
 	}
 
@@ -32,10 +33,10 @@ func (s PgRepo) SendTaskAnswer(teamId int, taskId int, teamAnswer string, answer
 	if err != nil {
 		return false, err
 	}
-	if s.checkTaskExist(task) != nil {
+	if err = s.checkTaskExist(task); err != nil {
 		return false, err
 	}
-	if s.checkTaskNotStarted(teamTask) != nil {
+	if err = s.checkTaskNotStarted(teamTask); err != nil {
 		return false, err
 	}
 	if isTaskPassed(task, teamTask) {
@@ -51,14 +52,19 @@ func (s PgRepo) SendTaskAnswer(teamId int, taskId int, teamAnswer string, answer
 	}
 
 	teamTask.Answers = append(teamTask.Answers, teamAnswer)
-	teamTask.AnswersUuid = append(teamTask.Answers, answerUuid)
-	teamTask.AnswersCreatedAt = append(teamTask.Answers, string(pq.FormatTimestamp(time.Now())))
+	teamTask.AnswersUuid = append(teamTask.AnswersUuid, answerUuid)
+	teamTask.AnswersCreatedAt = append(teamTask.AnswersCreatedAt, string(pq.FormatTimestamp(time.Now())))
+	teamTask.Status = api.TaskStatusAttemptFailed
+	if isAnswerPassed(task, teamAnswer) {
+		teamTask.Status = api.TaskStatusPassed
+	}
 
 	query := `
 		update team_task set 
 		    answers = :answers
 		    , answer_uuids = :answer_uuids
 		    , answers_created_at = :answers_created_at
+		    , status = :status
 		where team_id = :team_id and task_id = :task_id
 	`
 	res, err := s.db.NamedExec(query, teamTask)
