@@ -93,11 +93,11 @@ func makeContestResultsResponse(teamsTasks []teamsTasksEntity, contest contestEn
 				return api.GetContestResultsResponse{}, wrapInternalError(err, "answer.ParseTimestamp")
 			}
 			// штрафное время: прошедшее с начала турнира до сдачи этого задания
-			teamResponse.PenaltyTimeSec += int(passedAnswerTime.Sub(contest.StartAt).Seconds())
+			teamResponse.PenaltyTimeSec += int(passedAnswerTime.UTC().Sub(contest.StartAt.UTC()).Seconds())
 			// штрафное время: плюс 15 минут штрафа за каждую взятую подсказку
 			teamResponse.PenaltyTimeSec += int(teamTask.TaskNextHitNum.Int32) * hintPenaltySec
 			// штрафное время: плюс 30 минут штрафа за каждую неверную попытку сдачи
-			teamResponse.PenaltyTimeSec += len(teamTask.TaskAnswersCreatedAt) * incorrectAnswerPenaltySec
+			teamResponse.PenaltyTimeSec += (len(teamTask.TaskAnswersCreatedAt) - 1) * incorrectAnswerPenaltySec
 		}
 		teamResponse.TaskResults = append(
 			teamResponse.TaskResults, api.TaskResultResponse{

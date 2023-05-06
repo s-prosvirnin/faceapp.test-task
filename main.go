@@ -33,14 +33,6 @@ const (
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	go func(ctx context.Context) {
-		signalChan := make(chan os.Signal, 1)
-		signal.Notify(signalChan, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
-		<-signalChan
-		cancel()
-		time.Sleep(cancelContextSleepSec * time.Second)
-	}(ctx)
-
 	db, err := initDb(ctx)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "initDb"))
@@ -49,7 +41,8 @@ func main() {
 	controller := api.NewController(repo)
 
 	httpErrChan := listenHttp(initHttpServer(controller, repo))
-	exitChan := startListenForQuit(ctx)
+	exitChan := startListenForQuit(ctx, cancel)
+	log.Println("started")
 	select {
 	case err := <-httpErrChan:
 		log.Fatal(errors.Wrap(err, "received error from http server"))
@@ -119,7 +112,7 @@ func initDb(ctx context.Context) (*sqlx.DB, error) {
 	return db, nil
 }
 
-func startListenForQuit(ctx context.Context) <-chan struct{} {
+func startListenForQuit(ctx context.Context, ctxCancelFun context.CancelFunc) <-chan struct{} {
 	exitChan := make(chan struct{})
 	go func() {
 		quit := make(chan os.Signal, 3)
@@ -129,6 +122,8 @@ func startListenForQuit(ctx context.Context) <-chan struct{} {
 			return
 		case sig := <-quit:
 			log.Println("OS signal received: ", sig)
+			ctxCancelFun()
+			time.Sleep(cancelContextSleepSec * time.Second)
 			exitChan <- struct{}{}
 			close(exitChan)
 

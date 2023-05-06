@@ -56,8 +56,10 @@ func checkTaskNotStarted(task teamTaskEntity) error {
 	return nil
 }
 
-func checkTaskNextHintNumExist(task taskEntity, nextHintNum int) error {
-	if nextHintNum >= len(task.Hints) || nextHintNum < 0 {
+func checkTaskNextHintNumExist(task taskEntity, teamTask teamTaskEntity, nextHintNum int) error {
+	if nextHintNum >= len(task.Hints) ||
+		nextHintNum > teamTask.NextHintNum ||
+		nextHintNum < 0 {
 		return utils.NewErrWithType(api.ErrTaskHintNumNotExist, api.ErrorDomainType)
 	}
 
@@ -105,8 +107,8 @@ func checkAnswerPerTimeLimitExceed(teamTask teamTaskEntity) error {
 			teamTask.AnswersCreatedAt[i],
 		)
 
-		if time.Now().Sub(lastAnswerTime).Seconds() > 60 &&
-			(len(teamTask.AnswersCreatedAt)-1)-i > answerPerMinLimit {
+		if time.Now().Sub(lastAnswerTime).Seconds() <= 60 &&
+			len(teamTask.AnswersCreatedAt)-i > answerPerMinLimit {
 			return utils.NewErrWithType(api.ErrTaskAnswerPerTimeLimitExceeded, api.ErrorDomainType)
 		}
 	}

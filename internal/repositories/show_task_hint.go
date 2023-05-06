@@ -29,7 +29,7 @@ func (r PgRepo) ShowTaskHint(teamId int, taskId int, hintNum int) (nextHintNum i
 	if err = checkTaskNotStarted(teamTask); err != nil {
 		return 0, "", err
 	}
-	if err = checkTaskNextHintNumExist(task, hintNum); err != nil {
+	if err = checkTaskNextHintNumExist(task, teamTask, hintNum); err != nil {
 		return 0, "", err
 	}
 	// если номер подсказки для показа меньше чем текущий, то показываем последнюю показанную подсказку

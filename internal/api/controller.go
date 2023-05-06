@@ -44,8 +44,6 @@ type Controller struct {
 	service Service
 }
 
-// @todo: pros разобраться с датами, go ставит текущую локаль
-
 func NewController(service Service) *Controller {
 	return &Controller{service: service}
 }
@@ -120,11 +118,9 @@ func writeErrorResponse(writer http.ResponseWriter, err error) {
 func writeErrorsResponse(writer http.ResponseWriter, errs []error) {
 	writer.WriteHeader(http.StatusOK)
 
-	var validationErrorsKeys []string
-	var errorsKeys []string
+	validationErrorsKeys := []string{}
+	errorsKeys := []string{}
 	for _, err := range errs {
-		validationErrorsKeys = append(validationErrorsKeys, err.Error())
-
 		// разделяем вывод ошибок на внутренние и внешние
 		errorType := utils.GetErrorType(err)
 		switch errorType.Type() {
@@ -134,7 +130,9 @@ func writeErrorsResponse(writer http.ResponseWriter, errs []error) {
 		case ErrorDomainType:
 			errorsKeys = append(errorsKeys, errorType.Error())
 		case ErrorInvalidRequest:
-			errorsKeys = append(errorsKeys, ErrorInvalidRequest)
+			if len(validationErrorsKeys) == 0 {
+				errorsKeys = append(errorsKeys, ErrorInvalidRequest)
+			}
 			validationErrorsKeys = append(validationErrorsKeys, err.Error())
 		}
 	}
@@ -157,6 +155,8 @@ func (r *TeamRequest) Validate(requestCtx context.Context) []error {
 	var errs []error
 	if r.TeamId <= 0 {
 		errs = append(errs, utils.NewErrWithType(errors.New("team_id"), ErrorInvalidRequest))
+
+		return errs
 	}
 	// @todo: убрать team_id из запросов, а брать его по токену
 	ctxTeamId := requestCtx.Value(teamIdContextKey)

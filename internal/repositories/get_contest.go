@@ -19,7 +19,7 @@ func (r PgRepo) GetContest(teamId int) (api.GetContestResponse, error) {
 }
 
 func makeGetContestResponse(contest contestEntity) api.GetContestResponse {
-	timeToStartSec := int(time.Now().Sub(contest.StartAt).Seconds())
+	timeToStartSec := int(contest.StartAt.Sub(time.Now().UTC()).Seconds())
 	status := api.ContestStatusStarted
 	if timeToStartSec < 0 {
 		timeToStartSec = 0

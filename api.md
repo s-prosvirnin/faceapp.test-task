@@ -1,9 +1,10 @@
 # API
 
+`Response statuses: 200, 500, 502, 503` - структура ответа гарантируется только со статусом 200 (в том числе ошибка `internal_error`). Статусы `500, 502, 503` могут вернуться при ошибках инфраструктуры.
+
 ### Аутентификация
 
-`POST /auth`  
-`Response statuses: 200, 500`
+`POST /auth`
 
 - Экраны
     - Аутентификация
@@ -46,8 +47,7 @@
 
 ### Данные по текущему турниру
 
-`POST /team/contest`  
-`Response statuses: 200, 500`
+`POST /team/contest`
 
 - Описание
     
@@ -95,6 +95,7 @@
     			"internal_error", // серверная ошибка
     			"auth_token_invalid", // аутентификационный токен не валиден
     			"invalid_request", // поля в реквесте невалидны, см. invalid_request_fields
+    			"contest_not_found", // нет турниров
     			"team_not_found" // команда не найдена
     		],
     		// поля, не прошедшие валидацию
@@ -106,8 +107,7 @@
 
 ### Список всех заданий команды
 
-`POST /team/contest/tasks`  
-`Response statuses: 200, 500`
+`POST /team/contest/tasks`
 
 - Экраны
     - Авторизация
@@ -139,7 +139,7 @@
     			"hints": {
     				// открытые подсказки. номер подсказки - ключ массива
     				"opened": ["abc"],
-    				// количество доступных подсказок
+    				// количество всех подсказок, доступных для открытия
     				"total": 123,
     				// следующий номер подсказки. -1 - если все подсказки исчерпаны
     				// с этим номером можно идти в /team/contest/task/hint и получать следующую подсказку
@@ -172,8 +172,7 @@
 
 ### Начать задание
 
-`POST /team/contest/task/start`  
-`Response statuses: 200, 500`
+`POST /team/contest/task/start`
 
 - Экраны
     - Список всех заданий команды
@@ -221,8 +220,7 @@
 
 ### Отправить ответ по заданию
 
-`POST /team/contest/task/answer`  
-`Response statuses: 200, 500`
+`POST /team/contest/task/answer`
 
 - Экраны
     - Список всех заданий команды
@@ -234,7 +232,8 @@
     {
     	"team_id": 123,
     	"task_id": 123,
-    	"answer": "abc"
+    	"answer": "abc",
+    	"answer_uuid": "abc"
     }
     ```
     
@@ -262,6 +261,7 @@
     			"contest_not_started" // турнир не начался
     			"contest_finished" // турнир закончился
     			"task_not_found" // задание не найдено
+    			"task_not_started" // задание на начато
     			"answer_already_passed" // ответ по заданию уже принят
     			"answer_per_time_limit_exceeded" // превышено количество ответов за единицу времени
     			"answer_limit_exceeded" // превышено общее количество ответов
@@ -275,8 +275,7 @@
 
 ### Показать подсказку по заданию
 
-`POST /team/contest/task/hint`  
-`Response statuses: 200, 500`
+`POST /team/contest/task/hint`
 
 - Экраны
     - Список всех заданий команды
@@ -318,6 +317,7 @@
     			"contest_not_started" // турнир не начался
     			"contest_finished" // турнир закончился
     			"task_not_found" // задание не найдено
+    			"task_not_started" // задание на начато
     			"hint_num_not_exist" // нет подсказки с таким номером
     		],
     		// поля, не прошедшие валидацию
@@ -329,15 +329,16 @@
 
 ### Результаты всех команд
 
-`POST /contest/results`  
-`Response statuses: 200, 500`
+`POST /contest/results`
 
 - Headers
     - `Authorization: Bearer auth_token`
 - Request
     
     ```jsx
-    {}
+    {
+    	"team_id": 123
+    }
     ```
     
 - Success response

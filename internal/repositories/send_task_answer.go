@@ -63,7 +63,7 @@ func (r PgRepo) SendTaskAnswer(teamId int, taskId int, teamAnswer string, answer
 
 	teamTask.Answers = append(teamTask.Answers, teamAnswer)
 	teamTask.AnswersUuid = append(teamTask.AnswersUuid, answerUuid)
-	teamTask.AnswersCreatedAt = append(teamTask.AnswersCreatedAt, string(pq.FormatTimestamp(time.Now())))
+	teamTask.AnswersCreatedAt = append(teamTask.AnswersCreatedAt, string(pq.FormatTimestamp(time.Now().UTC())))
 	teamTask.Status = api.TaskStatusAttemptFailed
 	if isAnswerPassed(task, teamAnswer) {
 		teamTask.Status = api.TaskStatusPassed
