@@ -1,0 +1,849 @@
+POST http://localhost:8085/contest/results
+Content-Type: application/json
+Authorization: Bearer 114812dd-515b-4be8-9f5f-2fb391e9411f
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 1
+}
+
+<> 2023-05-07T155400.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/hint
+Content-Type: application/json
+Authorization: Bearer 114812dd-515b-4be8-9f5f-2fb391e9411f
+Content-Length: 51
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 1,
+  "task_id": 1,
+  "hint_num": 0
+}
+
+<> 2023-05-07T155356.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 114812dd-515b-4be8-9f5f-2fb391e9411f
+Content-Length: 87
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 1,
+  "task_id": 1,
+  "answer": "answer1",
+  "answer_uuid": "123456787"
+}
+
+<> 2023-05-07T155349.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/start
+Content-Type: application/json
+Authorization: Bearer 114812dd-515b-4be8-9f5f-2fb391e9411f
+Content-Length: 34
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 1,
+  "task_id": 1
+}
+
+<> 2023-05-07T155343.200.json
+
+###
+
+POST http://localhost:8085/team/contest/tasks
+Content-Type: application/json
+Authorization: Bearer 114812dd-515b-4be8-9f5f-2fb391e9411f
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 1
+}
+
+<> 2023-05-07T155334.200.json
+
+###
+
+POST http://localhost:8085/team/contest
+Content-Type: application/json
+Authorization: Bearer 114812dd-515b-4be8-9f5f-2fb391e9411f
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 1
+}
+
+<> 2023-05-07T155324.200.json
+
+###
+
+POST http://localhost:8085/team/contest
+Content-Type: application/json
+Authorization: Bearer 114812dd-515b-4be8-9f5f-2fb391e9411f
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 1
+}
+
+<> 2023-05-07T155314.200.json
+
+###
+
+POST http://localhost:8085/team/contest
+Content-Type: application/json
+Authorization: Bearer 114812dd-515b-4be8-9f5f-2fb391e9411f
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 1
+}
+
+<> 2023-05-07T155119.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login1",
+  "pass": "pass1"
+}
+
+<> 2023-05-07T154900.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login1",
+  "pass": "pass1"
+}
+
+<> 2023-05-07T154850.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login1",
+  "pass": "pass1"
+}
+
+<> 2023-05-07T154848.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login1",
+  "pass": "pass1"
+}
+
+<> 2023-05-07T154847.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login1",
+  "pass": "pass1"
+}
+
+<> 2023-05-07T154829.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login1",
+  "pass": "pass1"
+}
+
+<> 2023-05-07T154827.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login1",
+  "pass": "pass1"
+}
+
+<> 2023-05-07T154825.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login2",
+  "pass": "pass2"
+}
+
+<> 2023-05-07T154735.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login2",
+  "pass": "pass2"
+}
+
+<> 2023-05-07T154716.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login2",
+  "pass": "pass2"
+}
+
+<> 2023-05-07T153722.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login2",
+  "pass": "pass2"
+}
+
+<> 2023-05-07T153720.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login2",
+  "pass": "pass2"
+}
+
+<> 2023-05-07T153719.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login4",
+  "pass": "pass4"
+}
+
+<> 2023-05-07T153713.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login4",
+  "pass": "pass4"
+}
+
+<> 2023-05-07T153712.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login4",
+  "pass": "pass4"
+}
+
+<> 2023-05-07T153710.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login4",
+  "pass": "pass4"
+}
+
+<> 2023-05-07T153707.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login4",
+  "pass": "pass4"
+}
+
+<> 2023-05-07T153642.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login4",
+  "pass": "pass4"
+}
+
+<> 2023-05-07T153416.200.json
+
+###
+
+POST http://localhost:8085/auth
+Content-Type: application/json
+Content-Length: 42
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "login": "login4",
+  "pass": "pass4"
+}
+
+<> 2023-05-07T153405.200.json
+
+###
+
+POST http://localhost:8085/contest/results
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4
+}
+
+<> 2023-05-06T213809.200.json
+
+###
+
+POST http://localhost:8085/contest/results
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4
+}
+
+<> 2023-05-06T213239.200.json
+
+###
+
+POST http://localhost:8085/contest/results
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4
+}
+
+<> 2023-05-06T212702.200.json
+
+###
+
+POST http://localhost:8085/contest/results
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4
+}
+
+<> 2023-05-06T212558.200.json
+
+###
+
+POST http://localhost:8085/contest/results
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4
+}
+
+<> 2023-05-06T212448.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 87
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1,
+  "answer": "answer1",
+  "answer_uuid": "123456787"
+}
+
+<> 2023-05-06T212437.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 87
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1,
+  "answer": "answer2",
+  "answer_uuid": "123456786"
+}
+
+<> 2023-05-06T212433.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 87
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1,
+  "answer": "answer2",
+  "answer_uuid": "123456785"
+}
+
+<> 2023-05-06T212430.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 87
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1,
+  "answer": "answer2",
+  "answer_uuid": "123456789"
+}
+
+<> 2023-05-06T212422.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 87
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 2,
+  "answer": "answer2",
+  "answer_uuid": "123456789"
+}
+
+<> 2023-05-06T212413.200.json
+
+###
+
+POST http://localhost:8085/contest/results
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 18
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4
+}
+
+<> 2023-05-06T212335.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/hint
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 51
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 2,
+  "hint_num": 0
+}
+
+<> 2023-05-06T212329.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/hint
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 51
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1,
+  "hint_num": 0
+}
+
+<> 2023-05-06T212323.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 86
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 2,
+  "answer": "answer2",
+  "answer_uuid": "12345678"
+}
+
+<> 2023-05-06T212318.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 86
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 2,
+  "answer": "answer1",
+  "answer_uuid": "12345678"
+}
+
+<> 2023-05-06T212313.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 86
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1,
+  "answer": "answer1",
+  "answer_uuid": "12345678"
+}
+
+<> 2023-05-06T212309.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 86
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1,
+  "answer": "answer4",
+  "answer_uuid": "12345678"
+}
+
+<> 2023-05-06T212305.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 86
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1,
+  "answer": "answer3",
+  "answer_uuid": "12345678"
+}
+
+<> 2023-05-06T212302.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 86
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1,
+  "answer": "answer2",
+  "answer_uuid": "12345678"
+}
+
+<> 2023-05-06T212255.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/start
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 34
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 2
+}
+
+<> 2023-05-06T212250.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/start
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 34
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1
+}
+
+<> 2023-05-06T212245.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/answer
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 86
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1,
+  "answer": "answer2",
+  "answer_uuid": "12345678"
+}
+
+<> 2023-05-06T212219.200.json
+
+###
+
+POST http://localhost:8085/team/contest/task/start
+Content-Type: application/json
+Authorization: Bearer 5963e476-eac4-484c-9a09-ab940ec116bc
+Content-Length: 34
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.13 (Java/17.0.5)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "team_id": 4,
+  "task_id": 1
+}
+
+<> 2023-05-06T212211.200.json
+
+###
+

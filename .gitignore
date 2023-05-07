@@ -1,0 +1,6 @@
+/.tmp
+/.idea
+/build/.data
+.DS_Store
+.env
+./bin
