@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/config"
 	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/api"
 	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/repositories"
 	"github.com/gorilla/mux"
@@ -21,7 +22,7 @@ import (
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
-	cfg := initConfig()
+	cfg := config.InitConfig()
 
 	db, err := initDb(ctx, cfg)
 	if err != nil {
@@ -32,7 +33,7 @@ func main() {
 
 	httpErrChan := listenHttp(initHttpServer(controller, repo, cfg))
 	exitChan := startListenForQuit(ctx, cancel, cfg)
-	log.Println("http server started at port " + strconv.Itoa(cfg.httpPort))
+	log.Println("http server started at port " + strconv.Itoa(cfg.HttpPort))
 	select {
 	case err := <-httpErrChan:
 		log.Fatal(errors.Wrap(err, "received error from http server"))
@@ -41,7 +42,7 @@ func main() {
 	}
 }
 
-func initHttpServer(controller *api.Controller, service api.Service, cfg config) *http.Server {
+func initHttpServer(controller *api.Controller, service api.Service, cfg config.Config) *http.Server {
 	r := mux.NewRouter()
 	middleware := api.NewMiddleware(service)
 
@@ -74,19 +75,19 @@ func initHttpServer(controller *api.Controller, service api.Service, cfg config)
 	r.Use(middleware.MutateResponseHeaders)
 
 	return &http.Server{
-		Addr:    cfg.httpHost + ":" + strconv.Itoa(cfg.httpPort),
+		Addr:    cfg.HttpHost + ":" + strconv.Itoa(cfg.HttpPort),
 		Handler: r,
 	}
 }
 
-func initDb(ctx context.Context, cfg config) (*sqlx.DB, error) {
+func initDb(ctx context.Context, cfg config.Config) (*sqlx.DB, error) {
 	connString := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		cfg.dbHost,
-		cfg.dbPort,
-		cfg.dbUser,
-		cfg.dbPassword,
-		cfg.dbSchema,
+		cfg.DbHost,
+		cfg.DbPort,
+		cfg.DbUser,
+		cfg.DbPassword,
+		cfg.DbSchema,
 	)
 
 	db, err := sqlx.Open("postgres", connString)
@@ -102,7 +103,7 @@ func initDb(ctx context.Context, cfg config) (*sqlx.DB, error) {
 	return db, nil
 }
 
-func startListenForQuit(ctx context.Context, ctxCancelFun context.CancelFunc, cfg config) <-chan struct{} {
+func startListenForQuit(ctx context.Context, ctxCancelFun context.CancelFunc, cfg config.Config) <-chan struct{} {
 	exitChan := make(chan struct{})
 	go func() {
 		quit := make(chan os.Signal, 3)
@@ -113,7 +114,7 @@ func startListenForQuit(ctx context.Context, ctxCancelFun context.CancelFunc, cf
 		case sig := <-quit:
 			log.Println("OS signal received: ", sig)
 			ctxCancelFun()
-			time.Sleep(cfg.cancelContextSleepDuration)
+			time.Sleep(cfg.CancelContextSleepDuration)
 			exitChan <- struct{}{}
 			close(exitChan)
 
