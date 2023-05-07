@@ -37,13 +37,12 @@ func main() {
 		log.Fatal(errors.Wrap(err, "initDb"))
 	}
 
+	// запуск миграций на старте
 	// упрощение - лучше делать через команды
 	goose.SetBaseFS(embedMigrations)
-
 	if err := goose.SetDialect("postgres"); err != nil {
 		log.Fatal(errors.Wrap(err, "goose"))
 	}
-
 	if err := goose.Up(db.DB, "migrations"); err != nil {
 		log.Fatal(errors.Wrap(err, "goose"))
 	}
