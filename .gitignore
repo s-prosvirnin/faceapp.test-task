@@ -4,3 +4,4 @@
 .DS_Store
 .env
 ./bin
+.idea/httpRequests/http-requests-log.http
