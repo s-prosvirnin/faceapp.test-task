@@ -8,6 +8,8 @@ import (
 	"github.com/lib/pq"
 )
 
+// упростил - просто собрал большинство бизнес правил в одном месте
+
 func checkContestStarting(contest contestEntity) error {
 	if contest.StartAt.After(time.Now()) {
 		return utils.NewErrWithType(api.ErrContestNotStarted, api.ErrorTypeDomain)
