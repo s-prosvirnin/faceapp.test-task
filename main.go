@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"embed"
 	"fmt"
 	"log"
 	"net/http"
@@ -18,7 +19,11 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	"github.com/pressly/goose/v3"
 )
+
+//go:embed migrations/*.sql
+var embedMigrations embed.FS
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -31,6 +36,18 @@ func main() {
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "initDb"))
 	}
+
+	// упрощение - лучше делать через команды
+	goose.SetBaseFS(embedMigrations)
+
+	if err := goose.SetDialect("postgres"); err != nil {
+		log.Fatal(errors.Wrap(err, "goose"))
+	}
+
+	if err := goose.Up(db.DB, "migrations"); err != nil {
+		log.Fatal(errors.Wrap(err, "goose"))
+	}
+
 	repo := repositories.NewPgRepo(db)
 	controller := api.NewController(repo)
 

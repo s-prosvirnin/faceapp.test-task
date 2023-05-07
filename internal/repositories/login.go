@@ -16,9 +16,9 @@ func (r PgRepo) Login(login string, password string) (api.GetAuthResponse, error
 
 	query := `
 		select * from team
-		where login = :login and password = :password
+		where login = $1 and password = $2
 	`
-	err := r.db.Get(team, query)
+	err := r.db.Get(&team, query, login, password)
 	if err == sql.ErrNoRows {
 		return api.GetAuthResponse{}, utils.NewErrWithType(api.ErrLoginPasswordInvalid, api.ErrorTypeDomain)
 	}

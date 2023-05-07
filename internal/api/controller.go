@@ -48,6 +48,7 @@ func NewController(service Service) *Controller {
 	return &Controller{service: service}
 }
 
+// упрощение - не передается контекст в сервис (репозиторий)
 type Service interface {
 	GetContest(teamId int) (GetContestResponse, error)
 	Login(login string, password string) (GetAuthResponse, error)

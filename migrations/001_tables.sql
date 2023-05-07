@@ -1,5 +1,5 @@
 -- +goose Up
-/****** contest *****/
+-- contest
 DROP TABLE IF EXISTS contest;
 CREATE TABLE contest
 (
@@ -13,9 +13,9 @@ comment on column contest.id is 'Идентификатор турнира';
 comment on column contest.status is 'Текстовый статус актуальности турнира';
 comment on column contest.start_at is 'Дата-время начала';
 comment on column contest.end_at is 'Дата-время окончания';
-/****** contest *****/
+-- contest
 
-/****** contest_team *****/
+-- contest_team
 DROP TABLE IF EXISTS contest_team;
 CREATE TABLE contest_team
 (
@@ -26,9 +26,9 @@ CREATE TABLE contest_team
 comment on table contest_team is 'Турниры команд';
 comment on column contest_team.contest_id is 'Идентификатор турнира';
 comment on column contest_team.team_id is 'Идентификатор команды';
-/****** contest_team *****/
+-- contest_team
 
-/****** team *****/
+-- team
 DROP TABLE IF EXISTS team;
 CREATE TABLE team
 (
@@ -45,9 +45,9 @@ comment on column team.name is 'Название';
 comment on column team.login is 'Логин';
 comment on column team.password is 'Пароль';
 comment on column team.access_token is 'Аутентификационный токен';
-/****** team *****/
+-- team
 
-/****** task *****/
+-- task
 DROP TABLE IF EXISTS task;
 CREATE TABLE task
 (
@@ -67,9 +67,9 @@ comment on column task.coords_lon is 'Координата задания: до�
 comment on column task.description is 'Описание';
 comment on column task.answer is 'Правильный ответ';
 comment on column task.hints is 'Массив подсказок';
-/****** task *****/
+-- task
 
-/****** contest_task *****/
+-- contest_task
 DROP TABLE IF EXISTS contest_task;
 CREATE TABLE contest_task
 (
@@ -80,9 +80,9 @@ CREATE TABLE contest_task
 comment on table contest_task is 'Связь турниров и заданий';
 comment on column contest_task.contest_id is 'Идентификатор турнира';
 comment on column contest_task.task_id is 'Идентификатор задания';
-/****** contest_task *****/
+-- contest_task
 
-/****** team_task *****/
+-- team_task
 DROP TABLE IF EXISTS team_task;
 CREATE TABLE team_task
 (
@@ -103,4 +103,4 @@ comment on column team_task.answer_uuids is 'Массив uuid отправле�
 comment on column team_task.answers_created_at is 'Массив дата-времени принятия отправленных ответов';
 comment on column team_task.next_hint_num is 'Номер следующей неоткрытой подсказки. -1, если больше нет подсказок';
 comment on column team_task.status is 'Текстовый статус';
-/****** team_task *****/
+-- team_task
