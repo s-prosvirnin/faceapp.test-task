@@ -22,7 +22,7 @@ func (m Middleware) AuthRequest(nextHandler http.HandlerFunc) http.Handler {
 		func(w http.ResponseWriter, r *http.Request) {
 			accessToken := r.Header.Get("Authorization")
 			splitToken := strings.Split(accessToken, "Bearer ")
-			if len(splitToken) <= 2 {
+			if len(splitToken) < 2 {
 				writeErrorResponse(
 					w,
 					utils.NewErrWithType(ErrAuthTokenInvalid, ErrorTypeInvalidRequest),
