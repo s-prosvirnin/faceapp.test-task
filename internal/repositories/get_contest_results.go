@@ -42,8 +42,8 @@ func (r PgRepo) GetContestResults(teamId int) (api.GetContestResultsResponse, er
 	var teamsTasks []teamsTasksEntity
 	query := `
 		select
-		    teamEntity.id as team_id
-		    , teamEntity.name as team_name
+		    team.id as team_id
+		    , team.name as team_name
 		    , task.id as task_id
 		    , team_task.status as task_status
 		    , team_task.answers_created_at as task_answers_created_at
@@ -51,10 +51,10 @@ func (r PgRepo) GetContestResults(teamId int) (api.GetContestResultsResponse, er
 		from contest_task
 		inner join task on task.id = contest_task.task_id
 		inner join contest_team on contest_team.contest_id = contest_task.contest_id
-		inner join teamEntity on teamEntity.id = contest_team.team_id
-		left join team_task on team_task.task_id = contest_task.task_id and team_task.team_id = teamEntity.id
+		inner join team on team.id = contest_team.team_id
+		left join team_task on team_task.task_id = contest_task.task_id and team_task.team_id = team.id
 		where contest_task.contest_id = $1
-		order by teamEntity.id
+		order by team.id
 	`
 	err = r.db.Select(&teamsTasks, query, contest.Id)
 	if err == sql.ErrNoRows || teamsTasks == nil {
