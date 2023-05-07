@@ -22,7 +22,10 @@ import (
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
-	cfg := config.InitConfig()
+	cfg, err := config.InitConfig()
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "InitConfig"))
+	}
 
 	db, err := initDb(ctx, cfg)
 	if err != nil {
@@ -114,7 +117,7 @@ func startListenForQuit(ctx context.Context, ctxCancelFun context.CancelFunc, cf
 		case sig := <-quit:
 			log.Println("OS signal received: ", sig)
 			ctxCancelFun()
-			time.Sleep(cfg.CancelContextSleepDuration)
+			time.Sleep(time.Duration(cfg.CancelContextSleepDuration) * time.Second)
 			exitChan <- struct{}{}
 			close(exitChan)
 

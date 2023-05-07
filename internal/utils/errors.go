@@ -30,18 +30,6 @@ func (e ErrWithType) Unwrap() error {
 
 var ErrEmptyType = NewErrWithType(errors.New(""), "")
 
-func CheckErrorType(err error, errType string) bool {
-	for err != nil {
-		tErr, ok := err.(Typeable)
-		if ok {
-			return errType == tErr.Type()
-		}
-		err = errors.Unwrap(err)
-	}
-
-	return false
-}
-
 func GetErrorType(err error) Typeable {
 	for err != nil {
 		tErr, ok := err.(Typeable)

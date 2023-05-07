@@ -10,7 +10,7 @@ import (
 func (r PgRepo) GetTeamIdByAuthToken(accessToken string) (int, error) {
 	query := `
 		select a.id
-		from team a
+		from teamEntity a
 		where access_token = $1
 	`
 

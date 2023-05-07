@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/fa-rda/high-tech-cross.sergei-prosvirin/internal/utils"
 	"github.com/pkg/errors"
 )
 
@@ -21,6 +22,14 @@ func (m Middleware) AuthRequest(nextHandler http.HandlerFunc) http.Handler {
 		func(w http.ResponseWriter, r *http.Request) {
 			accessToken := r.Header.Get("Authorization")
 			splitToken := strings.Split(accessToken, "Bearer ")
+			if len(splitToken) == 0 {
+				writeErrorResponse(
+					w,
+					utils.NewErrWithType(ErrAuthTokenInvalid, ErrorTypeInvalidRequest),
+				)
+
+				return
+			}
 			accessToken = splitToken[1]
 			// @todo: убрать team_id из запросов, а брать его по токену
 			teamId, err := m.service.GetTeamIdByAuthToken(accessToken)

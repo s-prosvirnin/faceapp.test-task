@@ -36,12 +36,12 @@ type teamTaskEntity struct {
 	Status           string         `db:"status"`
 }
 
-type team struct {
-	Id          int    `db:"id"`
-	Name        string `db:"name"`
-	Login       string `db:"login"`
-	Password    string `db:"password"`
-	AccessToken string `db:"access_token"`
+type teamEntity struct {
+	Id          int            `db:"id"`
+	Name        string         `db:"name"`
+	Login       string         `db:"login"`
+	Password    string         `db:"password"`
+	AccessToken sql.NullString `db:"access_token"`
 }
 
 func (r PgRepo) getContestEntity(teamId int) (contestEntity, error) {

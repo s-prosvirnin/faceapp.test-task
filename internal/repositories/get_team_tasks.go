@@ -32,7 +32,7 @@ func (r PgRepo) GetTeamTasks(teamId int) (api.GetTasksResponse, error) {
 	if err == sql.ErrNoRows || tasks == nil {
 		// сверху мы проверили актуальность турнира, такая ситуация является внутренней ошибкой
 		return api.GetTasksResponse{}, utils.NewErrWithType(
-			errors.New("team tasks not found"),
+			errors.New("teamEntity tasks not found"),
 			api.ErrorTypeInternal,
 		)
 	}
