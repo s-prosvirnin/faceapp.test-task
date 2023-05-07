@@ -1,3 +1,4 @@
+-- +goose Up
 /****** contest *****/
 DROP TABLE IF EXISTS contest;
 CREATE TABLE contest

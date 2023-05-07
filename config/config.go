@@ -7,15 +7,15 @@ import (
 )
 
 type Config struct {
-	CancelContextSleepDuration int    `envconfig:"CANCEL_CONTEXT_SLEEP_DURATION" default:"0"`
-	HttpHost                   string `envconfig:"HTTP_HOST" default:"localhost"`
-	HttpPort                   int    `envconfig:"HTTP_PORT" default:"8085"`
+	CancelContextSleepDuration int    `envconfig:"CANCEL_CONTEXT_SLEEP_DURATION"`
+	HttpHost                   string `envconfig:"HTTP_HOST"`
+	HttpPort                   int    `envconfig:"HTTP_PORT"`
 
-	DbHost     string `envconfig:"DB_HOST" default:"localhost"`
-	DbPort     int    `envconfig:"DB_PORT" default:"54323"`
-	DbUser     string `envconfig:"DB_USER" default:"postgres"`
-	DbPassword string `envconfig:"DB_PASSWORD" default:"12345"`
-	DbSchema   string `envconfig:"DB_SCHEMA" default:"postgres"`
+	DbHost     string `envconfig:"DB_HOST"`
+	DbPort     int    `envconfig:"DB_PORT"`
+	DbUser     string `envconfig:"DB_USER"`
+	DbPassword string `envconfig:"DB_PASSWORD"`
+	DbSchema   string `envconfig:"DB_SCHEMA"`
 }
 
 func InitConfig() (Config, error) {

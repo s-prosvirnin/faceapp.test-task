@@ -1,3 +1,4 @@
+-- +goose Up
 /****** contest *****/
 insert into contest (start_at, end_at, status)
 values (NOW(), NOW() + INTERVAL '10 DAY', 'actual');
@@ -50,15 +51,3 @@ insert into contest_task (contest_id, task_id) values (1, 3);
 insert into contest_task (contest_id, task_id) values (1, 4);
 ;
 /****** contest_task *****/
-
-/****** team_task *****/
-insert into team_task (team_id, task_id, answers, answer_uuids, answers_created_at, next_hint_num, status)
-values (1, 1, '{"a1", "a2", "a3", "a3"}', '{"a11", "a22", "a33", "a34"}', '{NOW(), NOW(), NOW(), NOW()}', 4, 'attempt_failed');
-insert into team_task (team_id, task_id, answers, answer_uuids, answers_created_at, next_hint_num, status)
-values (1, 2, '{"a1", "a2", "answer2"}', '{"a11", "a22", "a33"}', '{NOW(), NOW(), NOW()}', 2, 'passed');
-insert into team_task (team_id, task_id, answers, answer_uuids, answers_created_at, next_hint_num, status)
-values (1, 3, '{}', '{}', '{}', 1, 'not_started');
-insert into team_task (team_id, task_id, answers, answer_uuids, answers_created_at, next_hint_num, status)
-values (2, 1, '{"a1", "a2", "a3", "answer1"}', '{"a11", "a22", "a33", "a34"}', '{NOW(), NOW(), NOW(), NOW()}', 1, 'passed');
-;
-/****** team_task *****/
