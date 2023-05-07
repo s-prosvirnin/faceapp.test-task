@@ -19,10 +19,10 @@ func (r *SendTaskAnswerRequest) Validate(requestCtx context.Context) []error {
 	errs := r.TeamRequest.Validate(requestCtx)
 	errs = append(errs, r.TaskRequest.Validate(requestCtx)...)
 	if r.Answer == "" {
-		errs = append(errs, utils.NewErrWithType(errors.New("answer"), ErrorInvalidRequest))
+		errs = append(errs, utils.NewErrWithType(errors.New("answer"), ErrorTypeInvalidRequest))
 	}
 	if r.AnswerUuid == "" {
-		errs = append(errs, utils.NewErrWithType(errors.New("answer_uuid"), ErrorInvalidRequest))
+		errs = append(errs, utils.NewErrWithType(errors.New("answer_uuid"), ErrorTypeInvalidRequest))
 	}
 
 	return errs
@@ -34,7 +34,7 @@ type SendTaskAnswerResponse struct {
 
 func (c *Controller) SendTaskAnswer(w http.ResponseWriter, r *http.Request) {
 	req := &SendTaskAnswerRequest{}
-	if !validateRequest(req, w, r) {
+	if !createRequestModelWithValidate(req, w, r) {
 		return
 	}
 

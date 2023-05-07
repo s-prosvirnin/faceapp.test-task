@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -18,31 +19,20 @@ import (
 	"github.com/pkg/errors"
 )
 
-const (
-	cancelContextSleepSec = 2
-	httpHost              = "localhost"
-	httpPort              = "8085"
-
-	dbHost     = "localhost"
-	dbPort     = 54323
-	dbUser     = "postgres"
-	dbPassword = "12345"
-	dbSchema   = "postgres"
-)
-
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
+	cfg := initConfig()
 
-	db, err := initDb(ctx)
+	db, err := initDb(ctx, cfg)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "initDb"))
 	}
 	repo := repositories.NewPgRepo(db)
 	controller := api.NewController(repo)
 
-	httpErrChan := listenHttp(initHttpServer(controller, repo))
-	exitChan := startListenForQuit(ctx, cancel)
-	log.Println("started")
+	httpErrChan := listenHttp(initHttpServer(controller, repo, cfg))
+	exitChan := startListenForQuit(ctx, cancel, cfg)
+	log.Println("http server started at port " + strconv.Itoa(cfg.httpPort))
 	select {
 	case err := <-httpErrChan:
 		log.Fatal(errors.Wrap(err, "received error from http server"))
@@ -51,7 +41,7 @@ func main() {
 	}
 }
 
-func initHttpServer(controller *api.Controller, service api.Service) *http.Server {
+func initHttpServer(controller *api.Controller, service api.Service, cfg config) *http.Server {
 	r := mux.NewRouter()
 	middleware := api.NewMiddleware(service)
 
@@ -84,19 +74,19 @@ func initHttpServer(controller *api.Controller, service api.Service) *http.Serve
 	r.Use(middleware.MutateResponseHeaders)
 
 	return &http.Server{
-		Addr:    httpHost + ":" + httpPort,
+		Addr:    cfg.httpHost + ":" + strconv.Itoa(cfg.httpPort),
 		Handler: r,
 	}
 }
 
-func initDb(ctx context.Context) (*sqlx.DB, error) {
+func initDb(ctx context.Context, cfg config) (*sqlx.DB, error) {
 	connString := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		dbHost,
-		dbPort,
-		dbUser,
-		dbPassword,
-		dbSchema,
+		cfg.dbHost,
+		cfg.dbPort,
+		cfg.dbUser,
+		cfg.dbPassword,
+		cfg.dbSchema,
 	)
 
 	db, err := sqlx.Open("postgres", connString)
@@ -112,7 +102,7 @@ func initDb(ctx context.Context) (*sqlx.DB, error) {
 	return db, nil
 }
 
-func startListenForQuit(ctx context.Context, ctxCancelFun context.CancelFunc) <-chan struct{} {
+func startListenForQuit(ctx context.Context, ctxCancelFun context.CancelFunc, cfg config) <-chan struct{} {
 	exitChan := make(chan struct{})
 	go func() {
 		quit := make(chan os.Signal, 3)
@@ -123,7 +113,7 @@ func startListenForQuit(ctx context.Context, ctxCancelFun context.CancelFunc) <-
 		case sig := <-quit:
 			log.Println("OS signal received: ", sig)
 			ctxCancelFun()
-			time.Sleep(cancelContextSleepSec * time.Second)
+			time.Sleep(cfg.cancelContextSleepDuration)
 			exitChan <- struct{}{}
 			close(exitChan)
 

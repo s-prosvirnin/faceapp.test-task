@@ -20,7 +20,7 @@ func NewPgRepo(db *sqlx.DB) PgRepo {
 }
 
 func wrapInternalError(err error, wrapMessage string) error {
-	return utils.NewErrWithType(errors.Wrap(err, wrapMessage), api.ErrorInternalType)
+	return utils.NewErrWithType(errors.Wrap(err, wrapMessage), api.ErrorTypeInternal)
 }
 
 func getHintNumForResponse(task taskEntity, teamTask teamTaskEntity) int {

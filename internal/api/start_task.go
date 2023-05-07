@@ -19,7 +19,7 @@ func (r *StartTaskRequest) Validate(requestCtx context.Context) []error {
 
 func (c *Controller) StartTask(w http.ResponseWriter, r *http.Request) {
 	req := &StartTaskRequest{}
-	if !validateRequest(req, w, r) {
+	if !createRequestModelWithValidate(req, w, r) {
 		return
 	}
 

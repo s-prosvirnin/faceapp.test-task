@@ -18,7 +18,7 @@ func (r *ShowTaskHintRequest) Validate(requestCtx context.Context) []error {
 	errs := r.TeamRequest.Validate(requestCtx)
 	errs = append(errs, r.TaskRequest.Validate(requestCtx)...)
 	if r.HintNum < 0 {
-		errs = append(errs, utils.NewErrWithType(errors.New("hint_num"), ErrorInvalidRequest))
+		errs = append(errs, utils.NewErrWithType(errors.New("hint_num"), ErrorTypeInvalidRequest))
 	}
 
 	return errs
@@ -31,7 +31,7 @@ type ShowTaskHintResponse struct {
 
 func (c *Controller) ShowTaskHint(w http.ResponseWriter, r *http.Request) {
 	req := &ShowTaskHintRequest{}
-	if !validateRequest(req, w, r) {
+	if !createRequestModelWithValidate(req, w, r) {
 		return
 	}
 

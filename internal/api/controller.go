@@ -10,9 +10,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-const ErrorInternalType = "internal_error"
-const ErrorDomainType = "domain_error"
-const ErrorInvalidRequest = "invalid_request"
+const ErrorTypeInternal = "internal_error"
+const ErrorTypeDomain = "domain_error"
+const ErrorTypeInvalidRequest = "invalid_request"
 
 const TaskStatusPassed = "passed"
 const TaskStatusNotStarted = "not_started"
@@ -66,11 +66,11 @@ type Validatable interface {
 	Validate(requestCtx context.Context) []error
 }
 
-func validateRequest(reqModel Validatable, writer http.ResponseWriter, request *http.Request) bool {
+func createRequestModelWithValidate(reqModel Validatable, writer http.ResponseWriter, request *http.Request) bool {
 	if err := json.NewDecoder(request.Body).Decode(reqModel); err != nil {
 		writeErrorResponse(
 			writer,
-			utils.NewErrWithType(errors.Wrap(err, "validateRequest json.NewDecoder"), ErrorInternalType),
+			utils.NewErrWithType(errors.Wrap(err, "createRequestModelWithValidate json.NewDecoder"), ErrorTypeInternal),
 		)
 
 		return false
@@ -124,14 +124,14 @@ func writeErrorsResponse(writer http.ResponseWriter, errs []error) {
 		// разделяем вывод ошибок на внутренние и внешние
 		errorType := utils.GetErrorType(err)
 		switch errorType.Type() {
-		case ErrorInternalType:
+		case ErrorTypeInternal:
 			log.Print(err)
-			errorsKeys = append(errorsKeys, ErrorInternalType)
-		case ErrorDomainType:
+			errorsKeys = append(errorsKeys, ErrorTypeInternal)
+		case ErrorTypeDomain:
 			errorsKeys = append(errorsKeys, errorType.Error())
-		case ErrorInvalidRequest:
+		case ErrorTypeInvalidRequest:
 			if len(validationErrorsKeys) == 0 {
-				errorsKeys = append(errorsKeys, ErrorInvalidRequest)
+				errorsKeys = append(errorsKeys, ErrorTypeInvalidRequest)
 			}
 			validationErrorsKeys = append(validationErrorsKeys, err.Error())
 		}
@@ -154,14 +154,14 @@ type TeamRequest struct {
 func (r *TeamRequest) Validate(requestCtx context.Context) []error {
 	var errs []error
 	if r.TeamId <= 0 {
-		errs = append(errs, utils.NewErrWithType(errors.New("team_id"), ErrorInvalidRequest))
+		errs = append(errs, utils.NewErrWithType(errors.New("team_id"), ErrorTypeInvalidRequest))
 
 		return errs
 	}
 	// @todo: убрать team_id из запросов, а брать его по токену
 	ctxTeamId := requestCtx.Value(teamIdContextKey)
 	if ctxTeamId != r.TeamId {
-		errs = append(errs, utils.NewErrWithType(ErrTeamNotFound, ErrorDomainType))
+		errs = append(errs, utils.NewErrWithType(ErrTeamNotFound, ErrorTypeDomain))
 	}
 
 	return errs
@@ -174,7 +174,7 @@ type TaskRequest struct {
 func (r *TaskRequest) Validate(requestCtx context.Context) []error {
 	var errs []error
 	if r.TaskId <= 0 {
-		errs = append(errs, utils.NewErrWithType(errors.New("task_id"), ErrorInvalidRequest))
+		errs = append(errs, utils.NewErrWithType(errors.New("task_id"), ErrorTypeInvalidRequest))
 	}
 
 	return errs

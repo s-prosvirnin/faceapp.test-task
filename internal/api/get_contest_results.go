@@ -30,7 +30,7 @@ type TaskResultResponse struct {
 
 func (c *Controller) GetContestResults(w http.ResponseWriter, r *http.Request) {
 	req := &GetContestResultsRequest{}
-	if !validateRequest(req, w, r) {
+	if !createRequestModelWithValidate(req, w, r) {
 		return
 	}
 

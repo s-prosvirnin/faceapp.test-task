@@ -21,7 +21,7 @@ type GetContestResponse struct {
 
 func (c *Controller) GetContest(w http.ResponseWriter, r *http.Request) {
 	req := &GetContestRequest{}
-	if !validateRequest(req, w, r) {
+	if !createRequestModelWithValidate(req, w, r) {
 		return
 	}
 

@@ -21,7 +21,7 @@ func (r PgRepo) Login(login string, password string) (api.GetAuthResponse, error
 
 	err := r.db.QueryRowx(query, authToken, login, password).StructScan(&team)
 	if err == sql.ErrNoRows {
-		return api.GetAuthResponse{}, utils.NewErrWithType(api.ErrLoginPasswordInvalid, api.ErrorDomainType)
+		return api.GetAuthResponse{}, utils.NewErrWithType(api.ErrLoginPasswordInvalid, api.ErrorTypeDomain)
 	}
 	if err != nil {
 		return api.GetAuthResponse{}, wrapInternalError(err, "db.Get")

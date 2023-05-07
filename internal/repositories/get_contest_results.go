@@ -61,7 +61,7 @@ func (r PgRepo) GetContestResults(teamId int) (api.GetContestResultsResponse, er
 		// сверху мы проверили актуальность турнира, такая ситуация является внутренней ошибкой
 		return api.GetContestResultsResponse{}, utils.NewErrWithType(
 			errors.New("contest results not found"),
-			api.ErrorInternalType,
+			api.ErrorTypeInternal,
 		)
 	}
 	if err != nil {

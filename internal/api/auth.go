@@ -16,10 +16,10 @@ type AuthRequest struct {
 func (a *AuthRequest) Validate(requestCtx context.Context) []error {
 	var errs []error
 	if a.Login == "" {
-		errs = append(errs, utils.NewErrWithType(errors.New("login"), ErrorInvalidRequest))
+		errs = append(errs, utils.NewErrWithType(errors.New("login"), ErrorTypeInvalidRequest))
 	}
 	if a.Password == "" {
-		errs = append(errs, utils.NewErrWithType(errors.New("pass"), ErrorInvalidRequest))
+		errs = append(errs, utils.NewErrWithType(errors.New("pass"), ErrorTypeInvalidRequest))
 	}
 
 	return errs
@@ -32,7 +32,7 @@ type GetAuthResponse struct {
 
 func (c *Controller) Auth(w http.ResponseWriter, r *http.Request) {
 	req := &AuthRequest{}
-	if !validateRequest(req, w, r) {
+	if !createRequestModelWithValidate(req, w, r) {
 		return
 	}
 

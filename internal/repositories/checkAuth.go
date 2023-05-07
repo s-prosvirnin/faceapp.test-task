@@ -17,7 +17,7 @@ func (r PgRepo) GetTeamIdByAuthToken(accessToken string) (int, error) {
 	var teamId int
 	err := r.db.Get(&teamId, query, accessToken)
 	if err == sql.ErrNoRows {
-		return 0, utils.NewErrWithType(api.ErrAuthTokenInvalid, api.ErrorDomainType)
+		return 0, utils.NewErrWithType(api.ErrAuthTokenInvalid, api.ErrorTypeDomain)
 	}
 	if err != nil {
 		return 0, wrapInternalError(err, "db.Get")
