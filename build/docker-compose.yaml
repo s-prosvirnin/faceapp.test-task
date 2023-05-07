@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_PASSWORD: 12345
       POSTGRES_USER: postgres
-      POSTGRES_DB: test_task
+      POSTGRES_DB: postgres
       # хак, чтобы данные сохранялись локально
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:

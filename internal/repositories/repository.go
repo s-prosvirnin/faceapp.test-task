@@ -7,10 +7,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-const (
-	teamTaskStatusActual = "actual"
-)
-
 type PgRepo struct {
 	db *sqlx.DB
 }

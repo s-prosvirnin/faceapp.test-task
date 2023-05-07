@@ -2,7 +2,7 @@ SHELL = /bin/sh
 
 # запуск докер образов для поднятия локальной инфраструктуры (postgres)
 docker-up:
-	PWD=$(PWD) user=$(id -u) group=$(id -g) docker-compose --file build/docker-compose.yaml up
+	PWD=$(PWD) user=$(id -u) group=$(id -g) docker-compose --file build/docker-compose.yaml up -d
 
 # запуск приложения
 run:
